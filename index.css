@@ -13,3 +13,7 @@ main {
 #reset {
   margin: 20px;
 }
+#below-1,
+#above-99 {
+  color: red;
+}
