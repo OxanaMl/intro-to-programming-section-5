@@ -7,6 +7,8 @@ const tooLowMessage = document.getElementById("too-low");
 const maxGuessesMessage = document.getElementById("max-guesses");
 const numberOfGuessesMessage = document.getElementById("number-of-guesses");
 const correctMessage = document.getElementById("correct");
+const belowMessage = document.getElementById("below-1");
+const aboveMessage = document.getElementById("above-99");
 
 let targetNumber;
 let attempts = 0;
@@ -25,41 +27,52 @@ function getRandomNumber(min, max) {
 function checkGuess() {
   // Get value from guess input element
   const guess = parseInt(guessInput.value, 10);
-  attempts = attempts + 1;
-
   hideAllMessages();
 
-  if (guess === targetNumber) {
-    numberOfGuessesMessage.style.display = "";
-    numberOfGuessesMessage.innerHTML = `You made ${attempts} guesses`;
+  //Prevent submitting numbers below 1 and above 99
+  if (guess < 1) {
+    belowMessage.style.display = "";
+  } else if (guess > 99) {
+    aboveMessage.style.display = "";
+  } else {
+    attempts = attempts + 1;
 
-    correctMessage.style.display = "";
+    if (guess === targetNumber) {
+      numberOfGuessesMessage.style.display = "";
+      numberOfGuessesMessage.innerHTML = `You made ${attempts} guesses`;
 
-    submitButton.disabled = true;
-    guessInput.disabled = true;
-  }
+      correctMessage.style.display = "";
 
-  if (guess !== targetNumber) {
-    if (guess < targetNumber) {
-      tooLowMessage.style.display = "";
-    } else {
-      tooHighMessage.style.display = "";
+      submitButton.disabled = true;
+      guessInput.disabled = true;
     }
 
-    const remainingAttempts = maxNumberOfAttempts - attempts;
+    if (guess !== targetNumber) {
+      if (guess < targetNumber) {
+        tooLowMessage.style.display = "";
+      } else {
+        tooHighMessage.style.display = "";
+      }
 
-    numberOfGuessesMessage.style.display = "";
-    numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
+      const remainingAttempts = maxNumberOfAttempts - attempts;
+
+      numberOfGuessesMessage.style.display = "";
+      if (remainingAttempts === 1) {
+        numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guess remaining`;
+      } else {
+        numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
+      }
+    }
+
+    if (attempts === maxNumberOfAttempts) {
+      submitButton.disabled = true;
+      guessInput.disabled = true;
+    }
+
+    guessInput.value = "";
+
+    resetButton.style.display = "";
   }
-
-  if (attempts === maxNumberOfAttempts) {
-    submitButton.disabled = true;
-    guessInput.disabled = true;
-  }
-
-  guessInput.value = "";
-
-  resetButton.style.display = "";
 }
 
 function hideAllMessages() {
